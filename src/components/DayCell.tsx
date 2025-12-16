@@ -47,18 +47,20 @@ export function DayCell({
         w-full h-full
         font-bold
         text-[clamp(0.5rem,2vw,1rem)]
-        ${isHighlighted 
-          ? "text-blue-900" 
-          : calendarDay.isCurrentMonth 
-            ? "text-gray-900" 
-            : "text-gray-500"}
+        ${
+          isHighlighted
+            ? "text-blue-900"
+            : calendarDay.isCurrentMonth
+            ? "text-gray-900"
+            : "text-gray-500"
+        }
         flex flex-col
       `}
       onClick={handleClick}
     >
-      <div className="flex-shrink-0">{calendarDay.day}</div>
+      <div className="shrink-0">{calendarDay.day}</div>
       {isLoaded && stamps.length > 0 && (
-        <div className="flex flex-wrap gap-1 mt-1 flex-shrink-0">
+        <div className="flex flex-wrap shrink-0 pointer-events-none">
           {stamps.map((stampName, index) => {
             const template = templates.find((t) => t.name === stampName);
             if (!template) return null;
