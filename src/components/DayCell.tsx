@@ -47,8 +47,11 @@ export function DayCell({
         w-full h-full
         font-bold
         text-[clamp(0.5rem,2vw,1rem)]
-        ${calendarDay.isCurrentMonth ? "text-black" : "text-gray-400"}
-        ${isHighlighted ? "bg-blue-200/50" : ""}
+        ${isHighlighted 
+          ? "text-blue-900" 
+          : calendarDay.isCurrentMonth 
+            ? "text-gray-900" 
+            : "text-gray-500"}
         flex flex-col
       `}
       onClick={handleClick}

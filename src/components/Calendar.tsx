@@ -122,6 +122,7 @@ export function Calendar() {
           const col = index % 7;
           const isFirstRow = row === 0;
           const isFirstCol = col === 0;
+          const isToday = isSameDay(nowDate, calendarDay.date);
 
           return (
             <div
@@ -130,7 +131,11 @@ export function Calendar() {
                 border-black
                 ${isFirstRow ? "" : "border-t"}
                 ${isFirstCol ? "" : "border-l"}
-                ${calendarDay.isCurrentMonth ? "bg-white/50" : "bg-gray-200/50"}
+                ${isToday 
+                  ? "bg-blue-400/70" 
+                  : calendarDay.isCurrentMonth 
+                    ? "bg-white/60" 
+                    : "bg-gray-100/40"}
                 p-[1%]
                 flex flex-col items-start justify-start
                 relative
@@ -141,7 +146,7 @@ export function Calendar() {
               <DayCell
                 calendarDay={calendarDay}
                 dayData={dayDataMap[formatDate(calendarDay.date)]}
-                isHighlighted={isSameDay(nowDate, calendarDay.date)}
+                isHighlighted={isToday}
                 onDayDataUpdate={(date, newDayData) => {
                   setDayDataMap((prev) => {
                     const updated = { ...prev };
