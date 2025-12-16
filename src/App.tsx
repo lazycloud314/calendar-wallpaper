@@ -3,7 +3,6 @@ import { Calendar } from "./components/Calendar";
 import { StampManager } from "./components/StampManager";
 import { useStampTemplatesStore } from "./stores/stampTemplates";
 import { cn } from "@/lib/utils";
-import bg from "./assets/bg.jpg";
 
 function App() {
   const { loadTemplates, isLoaded } = useStampTemplatesStore();
@@ -14,12 +13,7 @@ function App() {
 
   return (
     <div
-      className="w-screen h-screen portrait:py-[5%] portrait:px-[1%] landscape:py-[2%] landscape:px-[2%] flex flex-col landscape:flex-row items-center justify-between "
-      style={{
-        backgroundImage: `url(${bg})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
+      className="w-screen h-screen portrait:py-[5%] portrait:px-[1%] landscape:py-[2%] landscape:px-[2%] flex flex-col landscape:flex-row items-center justify-between geometric-lines-bg"
     >
       <div
         className={cn(
