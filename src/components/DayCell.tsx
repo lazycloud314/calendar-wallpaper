@@ -1,10 +1,11 @@
 import type { CalendarDay } from "../lib/calendarUtils";
 import type { DayData } from "../lib/storage/types";
-import { Stamp } from "./Stamp";
+import { Stamp, type StampSize } from "./Stamp";
 import { useStampTemplatesStore } from "../stores/stampTemplates";
 import { useSelectedStampStore } from "../stores/selectedStamp";
 import { StampStorage } from "../lib/storage/dayDataStorage";
 import { toast } from "sonner";
+import { useState, useEffect } from "react";
 
 interface DayCellProps {
   calendarDay: CalendarDay;
@@ -13,12 +14,24 @@ interface DayCellProps {
   onDayDataUpdate?: (date: Date, dayData: DayData) => void;
 }
 
+function getStampSize(stampCount: number): StampSize {
+  if (stampCount <= 3) {
+    return "medium";
+  } else if (stampCount <= 6) {
+    return "small";
+  } else {
+    return "mini";
+  }
+}
 export function DayCell({
   calendarDay,
   dayData,
   isHighlighted = false,
   onDayDataUpdate,
 }: DayCellProps) {
+  console.log("DayCell", calendarDay.date, dayData);
+
+
   const templates = useStampTemplatesStore((state) => state.templates);
   const isLoaded = useStampTemplatesStore((state) => state.isLoaded);
   const selectedStamp = useSelectedStampStore((state) => state.selectedStamp);
@@ -91,7 +104,7 @@ export function DayCell({
               <Stamp
                 key={`${stampName}-${index}`}
                 stampConfig={template}
-                size="small"
+                size={getStampSize(stamps.length)}
               />
             );
           })}

@@ -22,7 +22,7 @@ interface StampSettingsModalProps {
 }
 
 const DEFAULT_STAMP_CONFIG: StampConfig = {
-  name: "",
+  name: "star",
   variant: "circle",
   color: "#ef4444",
   iconName: "star",

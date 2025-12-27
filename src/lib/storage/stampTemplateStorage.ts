@@ -162,9 +162,30 @@ export class StampTemplateStorage {
 
   /**
    * 删除指定名称的印章模板
+   * 同时会从所有 dayData 中删除相关的 stamp 数据
    */
   static async deleteTemplate(name: string): Promise<StorageResult<void>> {
     try {
+      // 先获取所有 dayData，删除其中包含该模板名称的 stamp
+      const allDayDataResult = await storageDB.getAllDayData();
+      if (allDayDataResult.success && allDayDataResult.data) {
+        const dayDataList = allDayDataResult.data.items;
+
+        // 找出所有包含该 stamp 名称的 dayData
+        const dayDataToUpdate = dayDataList.filter(
+          (dayData) => dayData.stamps && dayData.stamps.includes(name)
+        );
+
+        // 批量更新这些 dayData，移除该 stamp
+        for (const dayData of dayDataToUpdate) {
+          const updatedStamps = dayData.stamps!.filter((s) => s !== name);
+          await storageDB.saveDayData(dayData.date, {
+            stamps: updatedStamps,
+          });
+        }
+      }
+
+      // 然后删除模板
       const db = await this.getDB();
 
       return new Promise((resolve, reject) => {
@@ -207,9 +228,7 @@ export class StampTemplateStorage {
       const existingTemplates = existingResult.success
         ? existingResult.data || []
         : [];
-      const existingMap = new Map(
-        existingTemplates.map((t) => [t.name, t])
-      );
+      const existingMap = new Map(existingTemplates.map((t) => [t.name, t]));
 
       const templates = configs.map((config) =>
         this.configToTemplate(config, existingMap.get(config.name))
@@ -288,4 +307,3 @@ export class StampTemplateStorage {
     }
   }
 }
-

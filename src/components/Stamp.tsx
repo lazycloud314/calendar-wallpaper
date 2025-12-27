@@ -10,13 +10,13 @@ interface StampProps {
 
 export type StampSize = "mini" | "small" | "medium" | "large" | "xlarge";
 
-// 固定的五种大小映射 - 使用分辨率相关的单位（rem + vw）
+
 const STAMP_SIZES: Record<StampSize, string> = {
-  mini: "clamp(0.75rem, 1.5vw, 1rem)", // 12px - 24px - 16px
-  small: "clamp(1rem, 2vw, 1.5rem)", // 16px - 32px - 24px
-  medium: "clamp(1.5rem, 3vw, 2rem)", // 24px - 48px - 32px
-  large: "clamp(2rem, 4vw, 3rem)", // 32px - 64px - 48px
-  xlarge: "clamp(2.5rem, 5vw, 4rem)", // 40px - 80px - 64px
+  mini: "clamp(0.75rem, 1.5vw, 1rem)",           // 12px - 16px (small 的 0.8 倍)
+  small: "clamp(1rem, 2vw, 1.25rem)",             // 16px - 20px (基准 1.25rem)
+  medium: "clamp(1.5rem, 2.8vw, 1.75rem)",       // 24px - 28px (small 的 1.4 倍)
+  large: "clamp(2rem, 4vw, 2.5rem)",             // 32px - 40px (small 的 2 倍)
+  xlarge: "clamp(2.75rem, 5.6vw, 3.5rem)",       // 44px - 56px (small 的 2.8 倍)
 };
 
 /**

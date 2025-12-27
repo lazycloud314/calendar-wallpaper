@@ -153,7 +153,7 @@ export function StampManager() {
             <TooltipTrigger asChild>
               <div
                 className={cn(
-                  "flex items-center justify-center border border-gray-500 rounded-lg hover:shadow-md transition-shadow cursor-pointer group relative aspect-square p-2 w-fit",
+                  "flex items-center justify-center border border-gray-300 rounded-lg hover:shadow-md transition-shadow cursor-pointer group relative aspect-square p-2 w-fit",
                   selectedStamp == stamp.name && "bg-blue-500/50"
                 )}
                 onClick={() => handleSelectStamp(stamp)}
