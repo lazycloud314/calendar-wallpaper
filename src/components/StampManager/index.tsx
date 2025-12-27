@@ -35,7 +35,6 @@ export function StampManager() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isHelpDialogOpen, setIsHelpDialogOpen] = useState(false);
   const [stampToDelete, setStampToDelete] = useState<string | null>(null);
-  
 
   // 确保 templates 已加载
   useEffect(() => {
@@ -68,8 +67,13 @@ export function StampManager() {
     color: string;
     iconName: string;
   }) => {
-    const { saveTemplate } = useStampTemplatesStore.getState();
+    const { saveTemplate, getTemplate } = useStampTemplatesStore.getState();
 
+    const exist = getTemplate(config.name);
+    if (exist) {
+      toast.error("图章已存在");
+      return;
+    }
     const result = await saveTemplate(
       {
         name: config.name,
@@ -236,9 +240,8 @@ export function StampManager() {
           <AlertDialogHeader>
             <AlertDialogTitle>使用帮助</AlertDialogTitle>
             <AlertDialogDescription>
-              1. 点击图章可以选中图章，选中后在日历格子中添加，重复添加会删除<br/>
-              2. 还没想好的说明还没想好的说明还没想好的说明还没想好的说明还没想好的说明还没想好的说明还没想好的说明<br/>
-              3. 还没想好的说明
+              1. 添加键添加图章<br/>
+              2. 点击图章可以选中图章，选中后在日历格子中添加，重复添加会删除<br/>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
