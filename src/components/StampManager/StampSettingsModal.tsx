@@ -12,6 +12,7 @@ import {
 } from "../ui/select";
 import type { StampConfig, StampVariant } from "./types";
 import { getIconByName } from "../../lib/iconUtils";
+import { toast } from "sonner";
 
 interface StampSettingsModalProps {
   isOpen: boolean;
@@ -48,7 +49,7 @@ export function StampSettingsModal({
 
   const handleSave = () => {
     if (!stampConfig.name.trim()) {
-      alert("请输入图章描述");
+      toast.error("请输入图章描述");
       return;
     }
     onSave(stampConfig);
@@ -92,8 +93,8 @@ export function StampSettingsModal({
               </div>
             </div>
 
-            {/* 描述 */}
-            <div>
+            {/* 描述壁纸无法接受输入，考虑在用户设置中添加 */}
+            {/* <div>
               <label className="block text-sm font-medium mb-2">描述</label>
               <input
                 type="text"
@@ -109,7 +110,7 @@ export function StampSettingsModal({
                 placeholder="输入图章描述"
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-            </div>
+            </div> */}
 
             {/* 图章样式 */}
             <div>
@@ -147,6 +148,7 @@ export function StampSettingsModal({
                     (prev: StampConfig): StampConfig => ({
                       ...prev,
                       iconName: selectedIconName,
+                      name: selectedIconName,
                     })
                   );
                 }}

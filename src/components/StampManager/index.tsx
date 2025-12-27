@@ -5,19 +5,37 @@ import { StampPreview } from "./StampPreview";
 import { useSelectedStampStore } from "../../stores/selectedStamp";
 import { useStampTemplatesStore } from "../../stores/stampTemplates";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../ui/alert-dialog";
 import { cn } from "@/lib/utils";
 import {
   IoTrashOutline,
   IoSettingsOutline,
   IoArrowUndoOutline,
+  IoHelpCircleOutline,
 } from "react-icons/io5";
+import { toast } from "sonner";
 
 export function StampManager() {
-  const { templates, loadTemplates } = useStampTemplatesStore();
+  const templates = useStampTemplatesStore((state) => state.templates);
+  const loadTemplates = useStampTemplatesStore((state) => state.loadTemplates);
+  const selectedStamp = useSelectedStampStore((state) => state.selectedStamp);
+  const setSelectedStamp = useSelectedStampStore((state) => state.setSelectedStamp);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingStamp, setEditingStamp] = useState<StampConfig | undefined>();
   const [editMode, setEditMode] = useState<boolean>(false);
-  const { setSelectedStamp } = useSelectedStampStore();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isHelpDialogOpen, setIsHelpDialogOpen] = useState(false);
+  const [stampToDelete, setStampToDelete] = useState<string | null>(null);
+  
 
   // 确保 templates 已加载
   useEffect(() => {
@@ -30,7 +48,11 @@ export function StampManager() {
   };
 
   const handleSelectStamp = (stamp: StampConfig) => {
-    setSelectedStamp(stamp.name);
+    if (selectedStamp != null && selectedStamp == stamp.name) {
+      setSelectedStamp(null);
+    } else {
+      setSelectedStamp(stamp.name);
+    }
   };
 
   const handleEditStamp = (stamp: StampConfig, e: React.MouseEvent) => {
@@ -61,41 +83,61 @@ export function StampManager() {
 
     if (!result.success) {
       console.error("保存印章模板失败:", result.error);
-      alert("保存失败: " + (result.error || "未知错误"));
+      toast.error("保存失败: " + (result.error || "未知错误"));
     }
 
     setIsModalOpen(false);
     setEditingStamp(undefined);
   };
 
-  const handleDeleteStamp = async (name: string) => {
+  const handleDeleteStamp = (name: string) => {
     setSelectedStamp(null);
-    if (confirm("确定要删除这个图章吗？")) {
-      const { deleteTemplate } = useStampTemplatesStore.getState();
-      const result = await deleteTemplate(name);
-      if (!result.success) {
-        console.error("删除印章模板失败:", result.error);
-        alert("删除失败: " + (result.error || "未知错误"));
-      }
+    setStampToDelete(name);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!stampToDelete) return;
+
+    const { deleteTemplate } = useStampTemplatesStore.getState();
+    const result = await deleteTemplate(stampToDelete);
+    if (!result.success) {
+      console.error("删除印章模板失败:", result.error);
+      toast.error("删除失败: " + (result.error || "未知错误"));
     }
+
+    setIsDeleteDialogOpen(false);
+    setStampToDelete(null);
   };
 
   return (
     <div className="w-full h-full flex gap-1 flex-row landscape:flex-col ">
-      <button
-        onClick={() => setEditMode(!editMode)}
-        className={cn(
-          "flex items-center justify-center text-white",
-          "portrait:h-full portrait:w-3 portrait:rounded-l-sm",
-          "landscape:h-3 landscape:w-full landscape:rounded-t-sm"
-        )}
-      >
-        {editMode ? (
-          <IoArrowUndoOutline className="w-3 h-3" />
-        ) : (
-          <IoSettingsOutline className="w-3 h-3" />
-        )}
-      </button>
+      <div className="flex gap-1 portrait:flex-col landscape:flex-row">
+        <button
+          onClick={() => setEditMode(!editMode)}
+          className={cn(
+            "flex items-center justify-center text-black-500 hover:text-blue-500 transition-colors",
+            "portrait:h-1/2 portrait:w-3 portrait:rounded-l-sm",
+            "landscape:h-3 landscape:w-1/2 landscape:rounded-t-sm"
+          )}
+        >
+          {editMode ? (
+            <IoArrowUndoOutline className="w-3 h-3" />
+          ) : (
+            <IoSettingsOutline className="w-3 h-3" />
+          )}
+        </button>
+        <button
+          onClick={() => setIsHelpDialogOpen(true)}
+          className={cn(
+            "flex items-center justify-center text-black-500 hover:text-blue-500 transition-colors",
+            "portrait:h-1/2 portrait:w-3 portrait:rounded-l-sm",
+            "landscape:h-3 landscape:w-1/2 landscape:rounded-t-sm"
+          )}
+        >
+          <IoHelpCircleOutline className="w-3 h-3" />
+        </button>
+      </div>
       <div
         className={cn(
           "grid gap-2 custom-scrollbar",
@@ -110,7 +152,10 @@ export function StampManager() {
           <Tooltip key={index} delayDuration={2000}>
             <TooltipTrigger asChild>
               <div
-                className="flex items-center justify-center border border-gray-200 rounded-lg hover:shadow-md transition-shadow cursor-pointer group relative aspect-square p-2 w-fit"
+                className={cn(
+                  "flex items-center justify-center border border-gray-500 rounded-lg hover:shadow-md transition-shadow cursor-pointer group relative aspect-square p-2 w-fit",
+                  selectedStamp == stamp.name && "bg-blue-500/50"
+                )}
                 onClick={() => handleSelectStamp(stamp)}
               >
                 <StampPreview stampConfig={stamp} showName={false} />
@@ -162,6 +207,45 @@ export function StampManager() {
         onSave={handleSaveStamp}
         initialConfig={editingStamp}
       />
+
+      {/* 删除确认对话框 */}
+      <AlertDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>确认删除</AlertDialogTitle>
+            <AlertDialogDescription>
+              确定要删除这个图章吗？此操作无法撤销。
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>取消</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>删除</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* 帮助的对话框 */}
+      <AlertDialog
+        open={isHelpDialogOpen}
+        onOpenChange={setIsHelpDialogOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>使用帮助</AlertDialogTitle>
+            <AlertDialogDescription>
+              1. 点击图章可以选中图章，选中后在日历格子中添加，重复添加会删除<br/>
+              2. 还没想好的说明还没想好的说明还没想好的说明还没想好的说明还没想好的说明还没想好的说明还没想好的说明<br/>
+              3. 还没想好的说明
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>确定</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

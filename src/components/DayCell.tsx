@@ -4,6 +4,7 @@ import { Stamp } from "./Stamp";
 import { useStampTemplatesStore } from "../stores/stampTemplates";
 import { useSelectedStampStore } from "../stores/selectedStamp";
 import { StampStorage } from "../lib/storage/dayDataStorage";
+import { toast } from "sonner";
 
 interface DayCellProps {
   calendarDay: CalendarDay;
@@ -18,28 +19,50 @@ export function DayCell({
   isHighlighted = false,
   onDayDataUpdate,
 }: DayCellProps) {
-  const { templates, isLoaded } = useStampTemplatesStore();
-  const { selectedStamp, setSelectedStamp } = useSelectedStampStore();
-
-  const handleClick = async () => {
-    // 如果没有选中的印章，不执行任何操作
-    if (!selectedStamp) {
-      return;
-    }
-
-    // 添加印章到该天
-    const result = await StampStorage.addStamp(calendarDay.date, selectedStamp);
-    if (result.success && result.data) {
-      // 通知父组件更新数据
-      onDayDataUpdate?.(calendarDay.date, result.data);
-    } else {
-      console.error("添加印章失败:", result.error);
-    }
-    setSelectedStamp(null);
-  };
+  const templates = useStampTemplatesStore((state) => state.templates);
+  const isLoaded = useStampTemplatesStore((state) => state.isLoaded);
+  const selectedStamp = useSelectedStampStore((state) => state.selectedStamp);
+  const setSelectedStamp = useSelectedStampStore(
+    (state) => state.setSelectedStamp
+  );
 
   // 如果 templates 还没有加载完成，不显示 stamps
   const stamps = isLoaded && dayData?.stamps ? dayData.stamps : [];
+
+  const handleClick = async () => {
+    // 如果没有选中的印章，不执行任何操作
+    if (!isLoaded || !selectedStamp) {
+      return;
+    }
+
+    if (stamps.find((s) => s === selectedStamp)) {
+      //删除印章
+      const result = await StampStorage.removeStamp(
+        calendarDay.date,
+        selectedStamp
+      );
+      if (result.success && result.data) {
+        // 通知父组件更新数据
+        onDayDataUpdate?.(calendarDay.date, result.data);
+      } else {
+        toast.error("删除印章失败:" + result.error);
+      }
+    } else {
+      // 添加印章到该天
+      const result = await StampStorage.addStamp(
+        calendarDay.date,
+        selectedStamp
+      );
+      if (result.success && result.data) {
+        // 通知父组件更新数据
+        onDayDataUpdate?.(calendarDay.date, result.data);
+      } else {
+        toast.error("添加印章失败:" + result.error);
+      }
+    }
+
+    setSelectedStamp(null);
+  };
 
   return (
     <div

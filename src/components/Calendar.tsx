@@ -33,8 +33,8 @@ export function Calendar() {
   const [mouseFollowerStamp, setMouseFollowerStamp] = useState<
     StampConfig | undefined
   >(undefined);
-  const { selectedStamp } = useSelectedStampStore();
-  const { templates } = useStampTemplatesStore();
+  const selectedStamp = useSelectedStampStore((state) => state.selectedStamp);
+  const templates = useStampTemplatesStore((state) => state.templates);
 
   const calendarDays = getCalendarDays(year, month);
 
@@ -77,9 +77,9 @@ export function Calendar() {
   };
 
   return (
-    <div className="flex flex-col p-[2%] w-full h-full">
+    <div className="flex flex-col p-[2%] w-full h-full select-none">
       {/* 月份标题 */}
-      <div className="mb-[2%] flex items-center justify-center gap-4 flex-shrink-0">
+      <div className="mb-[2%] flex items-center justify-center gap-4 shrink-0">
         <button
           onClick={goToPreviousMonth}
           className="flex items-center justify-center w-[clamp(2rem,5vw,3rem)] h-[clamp(2rem,5vw,3rem)] bg-gray-100 hover:bg-gray-200 rounded-full text-black text-[clamp(1.5rem,4vw,2.5rem)] font-medium transition-colors"
@@ -100,7 +100,7 @@ export function Calendar() {
       </div>
 
       {/* 星期标题 */}
-      <div className="grid grid-cols-7 border-b-2 border-black pb-[1%] mb-[0.5%] flex-shrink-0">
+      <div className="grid grid-cols-7 border-b-2 border-black pb-[1%] mb-[0.5%] shrink-0">
         {WEEKDAYS.map((weekday) => (
           <div
             key={weekday.en}
