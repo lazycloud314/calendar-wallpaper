@@ -1,7 +1,7 @@
-import { cn } from "@/lib/utils";
+import "./Background.css";
 
 export function Background() {
   return (
-    <div className="absolute top-0 left-0 w-full h-full geometric-lines-bg"></div>
+    <div className="absolute top-0 left-0 w-full h-full geometric-background"></div>
   );
 }

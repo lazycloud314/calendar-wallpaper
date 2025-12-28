@@ -19,10 +19,15 @@ function App() {
     <>
       <Background />
       <BackupClick />
-      <div className="w-screen h-screen portrait:py-[10%] portrait:px-[1%] landscape:py-[2%] landscape:px-[5%] flex flex-col landscape:flex-row items-center justify-between overflow-hidden scrollbar-hide">
+      <div className="relative bg-transparent z-10 w-screen h-screen portrait:py-[10%] portrait:px-[1%] landscape:py-[2%] landscape:px-[5%] flex flex-col landscape:flex-row items-center justify-between overflow-hidden scrollbar-hide">
         <div
           className={cn(
-            "bg-white-500/60 backdrop-blur-md shadow-sm rounded-xl",
+            // 玻璃态效果 - 半透明白色背景 + 强模糊
+            "bg-white/80 dark:bg-gray-900/80",
+            "backdrop-blur-xl",
+            "border border-white/30 dark:border-white/10",
+            "shadow-2xl shadow-black/10 dark:shadow-black/30",
+            "rounded-xl",
             // 竖屏样式（默认）
             "w-[95%] min-h-[50%] max-h-[70%] min-w-none max-w-none",
             // 横屏样式
@@ -33,7 +38,12 @@ function App() {
         </div>
         <div
           className={cn(
-            "bg-white-500/60 backdrop-blur-md shadow-sm rounded-xl p-2",
+            // 玻璃态效果 - 半透明白色背景 + 强模糊
+            "bg-white/80 dark:bg-gray-900/80",
+            "backdrop-blur-xl",
+            "border border-white/30 dark:border-white/10",
+            "shadow-2xl shadow-black/10 dark:shadow-black/30",
+            "rounded-xl p-2",
             // 竖屏样式
             "portrait:w-[95%] portrait:h-fit portrait:py-2 portrait:pl-0.5 portrait:pr-2",
             // 横屏样式
