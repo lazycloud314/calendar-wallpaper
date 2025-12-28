@@ -1,75 +1,70 @@
-# React + TypeScript + Vite
+# 📅 Calendar Wallpaper
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+一个WallPaper Engine上的日历壁纸，主要实现日历上的印章管理。
 
-Currently, two official plugins are available:
+## ✨ 特性
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 📆 **日历功能** - 完整的日历视图，支持日期标记
+- 🎨 **动态背景** - 流动的 blob 形态和动态渐变背景效果
+- 🏷️ **印章管理** - 自定义印章模板，为日期添加标记
+- 🎭 **玻璃态 UI** - 现代化的毛玻璃效果界面
 
-## React Compiler
+## 🚀 快速开始
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+### 环境要求
 
-Note: This will impact Vite dev & build performances.
+- Node.js >= 18
+- pnpm >= 10.11.0
 
-## Expanding the ESLint configuration
+### 安装
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+```bash
+# 克隆项目
+git clone <repository-url>
+cd calendar-wallpaper
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# 安装依赖
+pnpm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 开发
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# 启动开发服务器
+pnpm dev
 ```
+
+开发服务器将在 `http://localhost:5191` 启动。
+
+### 构建
+
+```bash
+# 构建生产版本
+pnpm build
+```
+
+### 预览
+
+```bash
+# 预览生产构建
+pnpm preview
+```
+
+### 代码检查
+
+```bash
+# 运行 ESLint
+pnpm lint
+```
+
+## 📝 许可证
+
+本项目采用 [MIT 许可证](LICENSE)。
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+---
+
+**注意**: 本项目使用 pnpm 作为包管理器，请确保使用正确的包管理器安装依赖。
